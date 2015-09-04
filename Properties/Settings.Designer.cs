@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Lutero.Properties {
+namespace Neowedge.Lutero.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Lutero
+namespace Neowedge.Lutero
 {
     public partial class Localization
     {

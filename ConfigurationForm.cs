@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Lutero
+namespace Neowedge.Lutero
 {
     public partial class ConfigurationForm : Form
     {

@@ -10,7 +10,7 @@ using System.Collections;
 using System.IO;
 using System.Globalization;
 
-namespace Lutero
+namespace Neowedge.Lutero
 {
     public partial class MainForm : Form
     {

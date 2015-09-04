@@ -1,4 +1,4 @@
-﻿namespace Lutero
+﻿namespace Neowedge.Lutero
 {
     partial class MainForm
     {
