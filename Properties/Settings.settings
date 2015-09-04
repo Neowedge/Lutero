@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Lutero.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Code" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{1} {0}Field; public {1} {0} { get { return {0}Field; } set { {0}Field = value; } }</Value>
+    </Setting>
+    <Setting Name="Accessor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">LocalizedResources.{0}</Value>
+    </Setting>
+    <Setting Name="CurrentLangFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>
