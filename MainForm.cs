@@ -122,11 +122,18 @@ namespace Neowedge.Lutero
         {
             if (loaded)
             {
+                try
+                {
                 this.localizationList[(string)this.DataGridViewTextos.Rows[e.RowIndex].Cells[0].Value].ArrayOfResources.
                     Where<Resource>(res => res.Name == (string)this.cbTags.SelectedItem).First<Resource>().Value =
                     this.DataGridViewTextos.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
                 this.btGuardar.Enabled = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Debes aceptar el nuevo tag antes de añadir valores en él");
+                }
             }
         }
 
@@ -143,43 +150,54 @@ namespace Neowedge.Lutero
 
         private void LoadFiles()
         {
-            this.cbTags.Items.Clear();
-
-            string[] fileNames = Directory.GetFiles(Properties.Settings.Default.CurrentLangFolder, "*.lng", SearchOption.TopDirectoryOnly);
-            Array.Sort(fileNames);
-
-            foreach (string fileName in fileNames)
+            try
             {
-                Localization localization;
-                FileStream file = null;
-                System.Xml.Serialization.XmlSerializer serializer;
-                try
-                {
-                    file = new FileStream(fileName, FileMode.Open);
-                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Localization));
-                    localization = (Localization)serializer.Deserialize(file);
+                this.cbTags.Items.Clear();
 
-                    if (localization.ArrayOfResources != null)
+                string[] fileNames = Directory.GetFiles(Properties.Settings.Default.CurrentLangFolder, String.Format("*.{0}", Localization.FILES_EXTENSION), SearchOption.TopDirectoryOnly);
+                Array.Sort(fileNames);
+
+                foreach (string fileName in fileNames)
+                {
+                    Localization localization;
+                    FileStream file = null;
+                    System.Xml.Serialization.XmlSerializer serializer;
+                    try
                     {
-                        localization.ArrayOfResources.OrderBy<Resource, string>(res => res.Name);
+                        file = new FileStream(fileName, FileMode.Open);
+                        serializer = new System.Xml.Serialization.XmlSerializer(typeof(Localization));
+                        localization = (Localization)serializer.Deserialize(file);
 
-                        foreach (Resource resource in localization.ArrayOfResources)
+                        if (localization.ArrayOfResources != null)
                         {
-                            if (!this.cbTags.Items.Contains(resource.Name))
-                                this.cbTags.Items.Add(resource.Name);
-                        }
-                    }
+                            localization.ArrayOfResources.OrderBy<Resource, string>(res => res.Name);
 
-                    if (!this.localizationList.ContainsKey(localization.Info.Language))
-                        this.localizationList.Add(localization.Info.Language, localization);
+                            foreach (Resource resource in localization.ArrayOfResources)
+                            {
+                                if (!this.cbTags.Items.Contains(resource.Name))
+                                    this.cbTags.Items.Add(resource.Name);
+                            }
+                        }
+
+                        if (!this.localizationList.ContainsKey(localization.Info.Language))
+                            this.localizationList.Add(localization.Info.Language, localization);
+                    }
+                    finally
+                    {
+                        if (file != null)
+                            file.Close();
+                    }
                 }
-                finally
-                {
-                    if (file != null)
-                        file.Close();
-                }
+                this.GroupBoxTextos.Enabled = true;
             }
-            this.GroupBoxTextos.Enabled = true;
+            catch (System.IO.IOException ex)
+            {
+                MessageBox.Show(String.Format("Error intentando acceder a la ruta {0} ", Properties.Settings.Default.CurrentLangFolder));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error desconocido");
+            }
         }
 
 
@@ -226,7 +244,7 @@ namespace Neowedge.Lutero
             try
             {
                 CultureInfo language = ((CultureInfo)this.cbLenguaje.SelectedItem);
-                string fileName = Path.Combine(Properties.Settings.Default.CurrentLangFolder, String.Format("{0}.lng", language.Name));
+                string fileName = Path.Combine(Properties.Settings.Default.CurrentLangFolder, String.Format("{0}.{1}", language.Name, Localization.FILES_EXTENSION));
                 if (File.Exists(fileName))
                     return false;
 
@@ -347,7 +365,7 @@ namespace Neowedge.Lutero
                     string fileName = "Ninguno"; 
                     try
                     {
-                        fileName = Path.Combine(Properties.Settings.Default.CurrentLangFolder, String.Format("{0}.{1}", localizationEntry.Key, "lng"));
+                        fileName = Path.Combine(Properties.Settings.Default.CurrentLangFolder, String.Format("{0}.{1}", localizationEntry.Key, Localization.FILES_EXTENSION));
                         file = new FileStream(fileName, FileMode.Create);
 
                         serializer.Serialize(file, localizationEntry.Value);

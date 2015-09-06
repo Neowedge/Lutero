@@ -8,8 +8,8 @@ namespace Neowedge.Lutero
 {
     public partial class Localization
     {
-        const string FILES_ROOT = "Language";
-        const string FILES_EXTENSION = "lang";
+        public const string FILES_ROOT = "Localization";
+        public const string FILES_EXTENSION = "xml";
 
         public static Localization GetLocalization(string localizationCode)
         {
