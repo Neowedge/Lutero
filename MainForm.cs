@@ -33,7 +33,10 @@ namespace Neowedge.Lutero
 
             if (!String.IsNullOrEmpty(Properties.Settings.Default.CurrentLangFolder))
             {
-                this.LoadFiles();
+                if (this.LoadFiles())
+                {
+                    this.folderBrowserDialog.SelectedPath = Properties.Settings.Default.CurrentLangFolder;
+                }
             }
         }
 
@@ -42,8 +45,10 @@ namespace Neowedge.Lutero
             if (this.folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 Properties.Settings.Default.CurrentLangFolder = this.folderBrowserDialog.SelectedPath;
-                LoadFiles();
-                Properties.Settings.Default.Save();
+                if (this.LoadFiles())
+                {
+                    Properties.Settings.Default.Save();
+                }
             }
         }
 
@@ -148,7 +153,7 @@ namespace Neowedge.Lutero
             Save();
         }
 
-        private void LoadFiles()
+        private bool LoadFiles()
         {
             try
             {
@@ -189,14 +194,17 @@ namespace Neowedge.Lutero
                     }
                 }
                 this.GroupBoxTextos.Enabled = true;
+                return true;
             }
             catch (System.IO.IOException ex)
             {
                 MessageBox.Show(String.Format("Error intentando acceder a la ruta {0} ", Properties.Settings.Default.CurrentLangFolder));
+                return false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error desconocido");
+                return false;
             }
         }
 
@@ -261,6 +269,7 @@ namespace Neowedge.Lutero
 
                 file.Close();
                 file = null;
+
 
                 LoadFiles();
 
