@@ -64,6 +64,13 @@ namespace Neowedge.Lutero
             this.TopMost = this.chkOnTop.Checked;
         }
 
+        private void txBuscar_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar(Keys.Enter)) {
+                SearchString();
+            }
+        }
+
         private void btBuscar_Click(object sender, EventArgs e)
         {
             SearchString();
@@ -175,7 +182,7 @@ namespace Neowedge.Lutero
 
                         if (localization.ArrayOfResources != null)
                         {
-                            localization.ArrayOfResources.OrderBy<Resource, string>(res => res.Name);
+                            localization.ArrayOfResources = localization.ArrayOfResources.OrderBy<Resource, string>(res => res.Name).ToArray<Resource>();
 
                             foreach (Resource resource in localization.ArrayOfResources)
                             {
@@ -231,12 +238,18 @@ namespace Neowedge.Lutero
                     }
                 }
             }
+            if (this.cbTags.Items.Count > 0)
+            {
+                this.cbTags.SelectedIndex = 0;
+            }
         }
 
         private void ReloadAllResources()
         {
+            this.cbTags.Items.Clear();
             foreach (KeyValuePair<string, Localization> localizationEntry in this.localizationList)
             {
+                localizationEntry.Value.ArrayOfResources = localizationEntry.Value.ArrayOfResources.OrderBy<Resource, string>(res => res.Name).ToArray<Resource>();
                 foreach (Resource resource in localizationEntry.Value.ArrayOfResources)
                 {
                     if (!this.cbTags.Items.Contains(resource.Name))
